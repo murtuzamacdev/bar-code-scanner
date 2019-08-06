@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner/ngx';
+import {Router} from '@angular/router'
+
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
@@ -11,7 +13,8 @@ export class HomePage {
   selectedBarcode;
 
   constructor(
-    private barcodeScanner: BarcodeScanner
+    private barcodeScanner: BarcodeScanner,
+    public router: Router
   ) { }
 
   onClick() {

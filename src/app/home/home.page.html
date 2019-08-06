@@ -6,10 +6,12 @@
   </ion-toolbar>
 </ion-header>
 
-<p>{{selectedBarcode.text}}</p>
-<p>{{selectedBarcode.format}}</p>
+<p>{{selectedBarcode && selectedBarcode.text}}</p>
+<p>{{selectedBarcode && selectedBarcode.format}}</p>
 
 
 <ion-button (click)="onClick()">Primary</ion-button><br>
 <button (click)="add()">Add item to excel</button><br>
+
+<ion-button (click)="router.navigateByUrl('/login');">To Login</ion-button><br>
 <button (click)="generate()">Generate excel</button>
