@@ -1,0 +1,23 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Scan Items</ion-title>
+    <ion-buttons slot="end">
+        <ion-button (click)="onDone()" shape="round" fill="outline">Done</ion-button>
+  </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    <ion-item *ngFor="let scannedItem of scannedItems; let i = index">
+      <ion-label>Item Id: <b>{{scannedItem.text}}</b></ion-label>
+      <ion-icon (click)="removeItem(i)" name="close-circle" item-right></ion-icon>
+    </ion-item>
+  </ion-list>
+</ion-content>
+ 
+<ion-footer no-shadow>
+  <ion-toolbar position="bottom">
+    <ion-button (click)="onScan()" size="large" expand="block">Add</ion-button>
+  </ion-toolbar>
+</ion-footer> 
