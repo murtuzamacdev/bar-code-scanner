@@ -1,0 +1,33 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>{{username}}</ion-title>
+    <ion-buttons slot="end">
+        <ion-button (click)="excelExport()" shape="round" fill="outline">Excel Export</ion-button>
+  </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<p class="list-heading">Below are the items you scanned at entry time:</p>
+<ion-content>
+  <ion-list>
+    <ion-item *ngFor="let scannedItem of scannedItems; let i = index">
+      <ion-label>Item Id: <b>{{scannedItem.text}}</b></ion-label>
+    </ion-item>
+  </ion-list>
+</ion-content>
+
+<p  class="list-heading">Below are the items you are checking out:</p>
+<ion-content>
+  <ion-list>
+    <ion-item *ngFor="let checkoutItem of checkoutItems; let i = index">
+      <ion-label>Item Id: <b>{{checkoutItem.text}}</b></ion-label>
+      <ion-icon (click)="removeItem(i)" name="close-circle" item-right></ion-icon>
+    </ion-item>
+  </ion-list>
+</ion-content>
+ 
+<ion-footer no-shadow>
+  <ion-toolbar position="bottom">
+    <ion-button (click)="onScan()" size="large" expand="block">Add</ion-button>
+  </ion-toolbar>
+</ion-footer> 
