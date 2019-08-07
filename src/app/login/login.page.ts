@@ -19,8 +19,9 @@ export class LoginPage implements OnInit {
 
   login() {
     if (this.username !== "") {
-      localStorage.setItem(this.username, JSON.stringify(this.username));
-      this.router.navigate(['scanner'], {state: {username: this.username}})
+      // localStorage.setItem(this.username, JSON.stringify(this.username));
+      localStorage.setItem('loggedInUser', this.username);
+      this.router.navigate(['choice'])
     } else {
       alert('Please enter username.')
     }

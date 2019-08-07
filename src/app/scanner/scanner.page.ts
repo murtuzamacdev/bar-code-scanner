@@ -10,7 +10,7 @@ import { Router } from '@angular/router'
 export class ScannerPage implements OnInit {
 
   scannedItems = [];
-  username = localStorage.getItem(window.history.state.username)
+  username = localStorage.getItem('loggedInUser')
 
   constructor(
     private barcodeScanner: BarcodeScanner,
