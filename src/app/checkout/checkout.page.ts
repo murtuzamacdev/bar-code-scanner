@@ -18,8 +18,13 @@ declare let window: any; // <--- Declare it like this
   styleUrls: ['./checkout.page.scss'],
 })
 export class CheckoutPage implements OnInit {
-
-  fileOpener = new FileOpener();
+  constructor(
+    public barcodeScanner: BarcodeScanner,
+    public router: Router,
+    // public file: File,
+    public fileOpener: FileOpener
+  ) { }
+  // fileOpener = new FileOpener();
 
   data: any = [{
     eid: 'e101',
@@ -41,14 +46,11 @@ export class CheckoutPage implements OnInit {
   checkoutItems = [];
   username = localStorage.getItem('loggedInUser')
 
-  constructor(
-    private barcodeScanner: BarcodeScanner,
-    public router: Router,
-    // private file: File,
-    // private fileOpener: FileOpener
-  ) { }
+ 
 
-  ngOnInit() {
+  ngOnInit() { 
+    alert('fffss');
+    console.log('ffffss' + File.dataDirectory)
     var storedNames = JSON.parse(localStorage.getItem(this.username + '_scannedItems'));
     console.log('test', storedNames)
     this.scannedItems = storedNames || []
@@ -81,54 +83,36 @@ export class CheckoutPage implements OnInit {
 
 
   private saveAsExcelFile(buffer: any, fileName: string): void {
-
-    window.requestFileSystem(window.TEMPORARY, 5 * 1024 * 1024,  (fs)=> {
-      const data: Blob = new Blob([buffer], {
-        type: EXCEL_TYPE
-      });
-      console.log(data)
-      console.log('file system open: ' + fs.name + fs);
-      this.createFile(fs.root, "murtuzaabc.xlsx", false, data);
+    // console.log(this.file)
+    const data: Blob = new Blob([buffer], {
+      type: EXCEL_TYPE
     });
 
+    window.resolveLocalFileSystemURL(File.externalRootDirectory, (fs) => {
 
+      console.log('file system open: ' + fs.name);
+      let filename = 'barcodeAppExcel' + new Date().getTime() + '.xlsx'
+      fs.getFile(filename, { create: true, exclusive: false }, (fileEntry) => {
+        console.log("fileEntry is file?" + fileEntry.isFile.toString());
+        this.writeFile(fileEntry, data, filename);
 
+      }, () => { });
 
-    //   this.fileOpener.open(data, 'application/pdf')
-    // .then(() => console.log('File is opened'))
-    // .catch(e => console.log('Error opening file', e));this.fileOpener.open('path/to/file.pdf', 'application/pdf')
-    // .then(() => console.log('File is opened'))
-    // .catch(e => console.log('Error opening file', e));
-
-    // const link = document.createElement('a');
-    // // create a blobURI pointing to our Blob
-    // link.href = URL.createObjectURL(data);
-    // link.download = fileName;
-    // // some browser needs the anchor to be in the doc
-    // document.body.append(link);
-    // link.click();
-    // link.remove();
-    // // in case the Blob uses a lot of memory
-    // window.addEventListener('focus', e=>URL.revokeObjectURL(link.href), {once:true});
-    // // FileSaver.saveAs(data, fileName + '_export_' + new Date().getTime() + EXCEL_EXTENSION);
+    }, () => { });
   }
-
-  createFile(dirEntry, fileName, isAppend, blob) {
-    // Creates a new file or returns the file if it already exists.
-    dirEntry.getFile(fileName, { create: true, exclusive: false },  (fileEntry) =>{
-
-      this.writeFile(fileEntry, blob, isAppend);
-
-    });
-
-  }
-  writeFile(fileEntry, dataObj, isAppend) {
+ 
+  writeFile(fileEntry, dataObj, filename) {
+    let me = this;
     // Create a FileWriter object for our FileEntry (log.txt).
     fileEntry.createWriter(function (fileWriter) {
 
       fileWriter.onwriteend = function () {
-        console.log("Successful file write...");
-        console.log(fileEntry)
+        alert('File save successfully!');
+        console.log("Successful file write...", fileEntry);
+        alert(fileEntry.nativeURL)
+        me.fileOpener.open( fileEntry.nativeURL, EXCEL_TYPE)
+          .then(() => alert('File is opened'))
+          .catch(e => alert(e));
         // readFile(fileEntry);
       };
 
@@ -138,26 +122,11 @@ export class CheckoutPage implements OnInit {
 
       // If data object is not passed in,
       // create a new Blob instead.
-      // if (!dataObj) {
-      //   dataObj = new Blob(dataObj, { type: 'text/plain' });
-      // }
+      if (!dataObj) {
+        // dataObj = new Blob(['some file data'], { type: 'text/plain' });
+      }
 
       fileWriter.write(dataObj);
     });
   }
-
-  // readFile(fileEntry) {
-
-  //   fileEntry.file(function (file) {
-  //     var reader = new FileReader();
-
-  //     reader.onloadend = function () {
-  //       console.log("Successful file read: " + this.result);
-  //       displayFileData(fileEntry.fullPath + ": " + this.result);
-  //     };
-
-  //     reader.readAsText(file);
-
-  //   });
-  // }
 }

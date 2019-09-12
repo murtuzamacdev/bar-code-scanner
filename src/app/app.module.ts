@@ -10,6 +10,10 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner/ngx';
 
+import { File } from '@ionic-native/File/ngx';
+import { FileOpener } from '@ionic-native/file-opener/ngx';
+
+
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],
@@ -18,6 +22,8 @@ import { BarcodeScanner } from '@ionic-native/barcode-scanner/ngx';
     BarcodeScanner,
     StatusBar,
     SplashScreen,
+    File,
+    FileOpener,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent]
