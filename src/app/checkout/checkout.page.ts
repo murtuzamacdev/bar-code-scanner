@@ -46,13 +46,10 @@ export class CheckoutPage implements OnInit {
   checkoutItems = [];
   username = localStorage.getItem('loggedInUser')
 
- 
 
-  ngOnInit() { 
-    alert('fffss');
-    console.log('ffffss' + File.dataDirectory)
+
+  ngOnInit() {
     var storedNames = JSON.parse(localStorage.getItem(this.username + '_scannedItems'));
-    console.log('test', storedNames)
     this.scannedItems = storedNames || []
   }
 
@@ -60,10 +57,7 @@ export class CheckoutPage implements OnInit {
     this.barcodeScanner.scan().then(barcodeData => {
       console.log('Barcode data', barcodeData);
       this.checkoutItems.push(barcodeData)
-    }).catch(err => {
-      console.log('Error', err);
-      alert(err)
-    });
+    }).catch(err => { });
   }
 
   removeItem(index) {
@@ -72,12 +66,22 @@ export class CheckoutPage implements OnInit {
 
 
   excelExport() {
+    console.log(this.scannedItems)
+    let len = (this.scannedItems.length >= this.checkoutItems.length) ? this.scannedItems.length : this.checkoutItems.length;
+    let result = [];
+    for (let i = 0; i < len; i++) {
+      let data = {
+        'Scanned Items': this.scannedItems[i] ? this.scannedItems[i].text : '',
+        'Returned Items': this.checkoutItems[i] ? this.checkoutItems[i].text : ''
+      }
+
+      result.push(data)
+    }
+    console.log(result)
     // alert('Work in Progress! This is where we will generate excel report.')
-    const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(this.data);
-    console.log('worksheet', worksheet);
+    const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(result);
     const workbook: XLSX.WorkBook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
     const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
-    //const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'buffer' });
     this.saveAsExcelFile(excelBuffer, 'test');
   }
 
@@ -100,19 +104,17 @@ export class CheckoutPage implements OnInit {
 
     }, () => { });
   }
- 
+
   writeFile(fileEntry, dataObj, filename) {
     let me = this;
     // Create a FileWriter object for our FileEntry (log.txt).
     fileEntry.createWriter(function (fileWriter) {
 
       fileWriter.onwriteend = function () {
-        alert('File save successfully!');
-        console.log("Successful file write...", fileEntry);
-        alert(fileEntry.nativeURL)
-        me.fileOpener.open( fileEntry.nativeURL, EXCEL_TYPE)
-          .then(() => alert('File is opened'))
-          .catch(e => alert(e));
+        alert('File saved at location - ' + fileEntry.nativeURL)
+        me.fileOpener.open(fileEntry.nativeURL, EXCEL_TYPE)
+          .then(() => { })
+          .catch(e => { });
         // readFile(fileEntry);
       };
 
